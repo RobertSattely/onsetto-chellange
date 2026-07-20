@@ -17,8 +17,7 @@ def main():
 
         Logger.info("Updating banking information...")
         banking = client.update_banking(
-            Generators.routing_number(),
-            Generators.account_number()
+            Generators.routing_number(), Generators.account_number()
         )
 
         Logger.success(
@@ -38,11 +37,7 @@ def main():
         exp_month, exp_year = Generators.future_expiration()
 
         payment = client.update_payment(
-            "Test User",
-            card_number,
-            exp_month,
-            exp_year,
-            Generators.cvc()
+            "Test User", card_number, exp_month, exp_year, Generators.cvc()
         )
 
         Logger.success(

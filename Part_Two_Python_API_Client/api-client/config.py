@@ -1,4 +1,8 @@
-BASE_URL = "https://zvyhufnwclhcvmgtqxwp.supabase.co/functions/v1/api-v1"
+from dotenv import load_dotenv
+import os
 
-EMAIL = "candidate1@onsetto.test"
-PASSWORD = "Password123!"
+load_dotenv()
+
+EMAIL = os.getenv("EMAIL")
+PASSWORD = os.getenv("PASSWORD")
+BASE_URL = os.getenv("BASE_URL")
