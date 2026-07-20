@@ -6,16 +6,17 @@ from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from pages.app_page import AppPage
 from pages.app.account_page import AccountPage
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 Logger.info("Initializing Playwright...")
 with sync_playwright() as p:
-    browser = p.chromium.launch(
-        headless=False,
-        args=["--start-maximized"]
-    )
+    browser = p.chromium.launch(headless=False, args=["--start-maximized"])
 
-    username = "candidate1@onsetto.test"
-    password = "Password123!"
+    username = os.getenv("EMAIL")
+    password = os.getenv("PASSWORD")
 
     bank_routing = Generators.routing_number()
     account_number = Generators.account_number()
@@ -24,7 +25,6 @@ with sync_playwright() as p:
     card_number = Generators.card_number()
     exp_month, exp_year = Generators.future_expiration()
     cvc = Generators.cvc()
-
 
     page = browser.new_page(no_viewport=True)
     Logger.info("Navigating to the home page...")
@@ -36,14 +36,11 @@ with sync_playwright() as p:
     home.open_home_page()
     home.click_login()
     login.verify_login_page()
-    login.login(
-        username,
-        password
-    )
+    login.login(username, password)
     login.has_invalid_login()
-    
+
     if login.verify_mfa_page():
-        code = Generators.generate_mfa_code()  
+        code = Generators.generate_mfa_code()
         login.submit_mfa(code)
     else:
         Logger.error("MFA page verification failed.")
@@ -59,17 +56,8 @@ with sync_playwright() as p:
 
     account.verify_account_page()
 
-    account.add_banking_details(
-        bank_routing,
-        account_number
-    )
+    account.add_banking_details(bank_routing, account_number)
 
-    account.add_payment_method(
-        holder,
-        card_number,
-        exp_month,
-        exp_year,
-        cvc
-    )
+    account.add_payment_method(holder, card_number, exp_month, exp_year, cvc)
 
     browser.close()

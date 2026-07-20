@@ -1,5 +1,6 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from helpers.logger import Logger
+
 
 class AppPage:
     """Page object for the main application navigation and user actions."""
@@ -13,7 +14,7 @@ class AppPage:
         self.orders_link = page.get_by_role("link", name="Orders")
         self.account_link = page.get_by_role("link", name="Account")
         self.api_docs_link = page.get_by_role("link", name="API Docs")
-        
+
         self.logout_btn = self.page.get_by_role("button", name="logout")
 
     def go_to_marketplace(self):
@@ -38,9 +39,7 @@ class AppPage:
 
     def verify_logged_in_user(self, username: str):
         """Verify that the expected user is logged in."""
-        is_user_valid = self.page.get_by_text(
-            username, exact=True
-        ).is_visible()
+        is_user_valid = self.page.get_by_text(username, exact=True).is_visible()
 
         is_login_visible = self.logout_btn.is_visible()
 

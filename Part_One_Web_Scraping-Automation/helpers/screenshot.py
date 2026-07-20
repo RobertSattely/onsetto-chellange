@@ -1,6 +1,8 @@
 """Screenshot helper utilities."""
+
 from pathlib import Path
 from datetime import datetime
+
 
 class Screenshot:
     """Collection of screenshot helpers."""
@@ -15,9 +17,6 @@ class Screenshot:
 
         filename = f"screenshots/{timestamp}_{name}.png"
 
-        page.screenshot(
-            path=filename,
-            full_page=True
-        )
+        page.screenshot(path=filename, full_page=True)
 
         return filename
