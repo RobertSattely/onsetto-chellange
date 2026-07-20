@@ -1,5 +1,12 @@
-node_modules/
-playwright-report/
-test-results/
-screenshots/
+# Virtual environment
+.venv/
+
+# Secrets
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Screenshots
+screenshots/

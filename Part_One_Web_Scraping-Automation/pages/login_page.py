@@ -1,6 +1,7 @@
 from playwright.sync_api import Page, expect
 from helpers.logger import Logger
 
+
 class LoginPage:
     """Page object for the login and MFA screens."""
 
@@ -31,18 +32,16 @@ class LoginPage:
     def has_invalid_login(self):
         """Return True if an invalid login error message is visible."""
         Logger.info("Checking for invalid login credentials...")
-        Logger.info(f"Invalid login credentials message is visible: {self.error_toast.is_visible()}")
-        return self.page.get_by_text(
-            "Invalid login credentials"
-        ).is_visible()
-    
+        Logger.info(
+            f"Invalid login credentials message is visible: {self.error_toast.is_visible()}"
+        )
+        return self.page.get_by_text("Invalid login credentials").is_visible()
+
     def verify_login_page(self):
         """Verify that the login page is displayed by checking the URL."""
         Logger.section("Login Details")
         Logger.info("Verifying that the login page is displayed...")
-        expect(self.page).to_have_url(
-            "https://marketplace.dev-challenge.com/login"
-        )
+        expect(self.page).to_have_url("https://marketplace.dev-challenge.com/login")
 
     def verify_mfa_page(self):
         """Verify that the MFA page is displayed with the expected message."""

@@ -1,5 +1,6 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from helpers.logger import Logger
+
 
 class HomePage:
     """Page object model for the home page."""
@@ -20,4 +21,3 @@ class HomePage:
         """Click the login button on the home page."""
         Logger.info("Clicking the login button...")
         self.login_btn.click()
-        

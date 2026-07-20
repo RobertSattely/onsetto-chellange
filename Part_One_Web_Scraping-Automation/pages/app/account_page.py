@@ -6,6 +6,7 @@ from helpers.logger import Logger
 from helpers.validators import Validators
 from helpers.screenshot import Screenshot
 
+
 class AccountPage:
     """Page object for account management including banking details and payment methods."""
 
@@ -31,7 +32,9 @@ class AccountPage:
         }
 
         self.saved_bank_info = page.get_by_test_id("bank-saved-info").locator("p").first
-        self.saved_payment_info = page.get_by_test_id("payment-saved-info").locator("p").first
+        self.saved_payment_info = (
+            page.get_by_test_id("payment-saved-info").locator("p").first
+        )
 
     def verify_account_page(self):
         """
@@ -41,11 +44,11 @@ class AccountPage:
         expect(self.page).to_have_url(
             "https://marketplace.dev-challenge.com/app/account"
         )
-    
+
     def add_banking_details(self, routing: str, account: str):
         """
         Add banking details to the account with routing and account number validation.
-        
+
         Args:
             routing: Bank routing number (must be 9 digits)
             account: Bank account number (4-17 digits)
@@ -71,36 +74,29 @@ class AccountPage:
 
         Logger.info("Entering account number...")
         self.banking_details["account"].fill(account)
-        
-        Screenshot.capture(
-                self.page,
-                "banking_details_before_save"
-            )
-        
+
+        Screenshot.capture(self.page, "banking_details_before_save")
+
         Logger.info("Saving banking details...")
 
         # Use the locator from the banking_details mapping
         self.banking_details["save"].click()
 
         Logger.success("Banking details submitted.\n")
-        
+
         expect(self.saved_bank_info).to_contain_text(routing[-4:])
         expect(self.saved_bank_info).to_contain_text(account[-4:])
-        
-        self.verify_saved_banking_details(
-            routing,
-            account
-        )
-        
-        Screenshot.capture(
-            self.page,
-            "banking_details_saved"
-        )
-      
-    def add_payment_method(self, holder: str, card_number: str, exp_month: str, exp_year: str, cvc: str):
+
+        self.verify_saved_banking_details(routing, account)
+
+        Screenshot.capture(self.page, "banking_details_saved")
+
+    def add_payment_method(
+        self, holder: str, card_number: str, exp_month: str, exp_year: str, cvc: str
+    ):
         """
         Add a payment method to the account with card details validation.
-        
+
         Args:
             holder: Card holder name
             card_number: Credit card number
@@ -167,31 +163,21 @@ class AccountPage:
         self.payment_method["cvc"].fill(cvc)
 
         Logger.info("Saving payment method...")
-        
-        Screenshot.capture(
-            self.page,
-            "payment_method_before_save"
-        )
+
+        Screenshot.capture(self.page, "payment_method_before_save")
         self.payment_method["save"].click()
-        
+
         expect(self.saved_payment_info).to_contain_text(card_number[-4:])
         expect(self.saved_payment_info).to_contain_text(f"{int(exp_month)}/{exp_year}")
-       
-        self.verify_saved_payment_method(
-            card_number,
-            exp_month,
-            exp_year
-        )
-        Screenshot.capture(
-            self.page,
-            "payment_method_saved"
-        )
+
+        self.verify_saved_payment_method(card_number, exp_month, exp_year)
+        Screenshot.capture(self.page, "payment_method_saved")
         Logger.success("Payment method submitted.\n")
 
     def verify_saved_banking_details(self, routing: str, account: str):
         """
         Verify that the saved banking details match the provided routing and account numbers.
-        
+
         """
         Logger.info("Verifying saved banking details...")
 
@@ -218,7 +204,9 @@ class AccountPage:
 
         Logger.success("Banking details verified successfully.")
 
-    def verify_saved_payment_method(self,card_number: str,exp_month: str,exp_year: str):
+    def verify_saved_payment_method(
+        self, card_number: str, exp_month: str, exp_year: str
+    ):
         """
         Verify that the saved payment method details match the provided card number
         and expiration date.
@@ -242,7 +230,6 @@ class AccountPage:
         saved_exp = text.split("Expires")[1].strip()
 
         expected_exp = f"{int(exp_month)}/{exp_year}"
-
 
         if saved_exp != expected_exp:
             raise ValueError(
